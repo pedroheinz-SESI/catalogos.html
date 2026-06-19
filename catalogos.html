@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo de Filmes</title>
+</head>
+<body>
+  <h1>Catálogo de Filmes e Séries</h1>
+
+  <input id="titulo" placeholder="Título do filme/série">
+  <input id="genero" placeholder="Gênero">
+  <button onclick="adicionar()">Adicionar</button>
+
+  <h2>Minha Lista</h2>
+  <ul id="lista"></ul>
+
+  <script>
+    let filmes = JSON.parse(localStorage.getItem('filmes')) || [];
+
+    function salvar() {
+      localStorage.setItem('filmes', JSON.stringify(filmes));
+      listar();
+    }
+
+    function adicionar() {
+      const titulo = document.getElementById('titulo').value.trim();
+      const genero = document.getElementById('genero').value.trim();
+
+      if (!titulo || !genero) return alert('Preencha todos os campos');
+
+      const existe = filmes.find(f => f.titulo.toLowerCase() === titulo.toLowerCase());
+      if (existe) return alert('Título já cadastrado');
+
+      filmes.push({ titulo, genero });
+      salvar();
+
+      document.getElementById('titulo').value = '';
+      document.getElementById('genero').value = '';
+    }
+
+    function listar() {
+      const ul = document.getElementById('lista');
+      ul.innerHTML = '';
+
+      filmes.forEach(f => {
+        ul.innerHTML += `<li>${f.titulo} - ${f.genero}</li>`;
+      });
+    }
+
+    listar();
+  </script>
+</body>
+</html>
